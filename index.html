@@ -1020,7 +1020,7 @@
         <!-- You can delete the links only if you've purchased the pro version. -->
         <!-- Licensing information: https://bootstrapmade.com/license/ -->
         <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href=“https://themewagon.com>ThemeWagon
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
       </div>
     </div>
 
@@ -1047,19 +1047,37 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
-
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script> 
-  
-  <script src="assets/js/main.js"></script>
-
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    async function ensureLiffInit() {
+      if (!window.__liffInited) {
+        await liff.init({ liffId: '2008379915-7JJn198A' });
+        window.__liffInited = true;
+      }
+    }
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-</body> 
-</html>
+    async function loginWithLine() {
+      try {
+        await ensureLiffInit();
+        if (!liff.isLoggedIn()) {
+          liff.login({ scope: 'profile openid email' });
+          return;
+        }
+        const profile = await liff.getProfile();
+        console.log('LINE profile:', profile);
+        alert('LINE 登入成功：' + profile.displayName);
+        const modalEl = document.getElementById('loginModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+      } catch (e) {
+        console.error(e);
+        alert('LINE 登入失敗');
+      }
+    }
+  </script>
 
-</body>
+ 
 
 <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -1107,6 +1125,8 @@
              data-logo_alignment="left">
         </div>
         
+        <button class="btn btn-success w-100 mt-2" onclick="loginWithLine()">使用 LINE 登入</button>
+        
       </div>
     </div>
   </div>
@@ -1114,4 +1134,5 @@
 
 
 
+</body>
 </html>
